@@ -1,0 +1,25 @@
+---
+- name: Загрузка Kibana репозитория
+  shell: wget https://mirror.yandex.ru/mirrors/elastic/7/pool/main/k/kibana/kibana-7.17.9-amd64.deb
+  args:
+    chdir: /tmp
+
+- name: Установка Kibana репозитория
+  shell: dpkg -i kibana-7.17.9-amd64.deb
+  args:
+    chdir: /tmp
+
+- name: Обновление пакетов
+  apt:
+    update_cache: yes
+
+- name: Импортируем настройки
+  copy: 
+    src: /home/timakhova/diploma2/ansible/roles/kibana/vars/main.yml
+    dest: /etc/kibana/kibana.yml
+
+- name: Перезагрузка Kibana
+  ansible.builtin.systemd:
+    name: kibana
+    state: restarted
+    enabled: true

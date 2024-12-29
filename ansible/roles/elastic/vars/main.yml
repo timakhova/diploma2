@@ -1,0 +1,8 @@
+cluster.name: Diplom-logging
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+discovery.seed_hosts: ["10.128.30.5"]
+discovery.type: single-node
+network.host: 10.128.30.5
+http.port: 9200
+xpack.security.enabled: true

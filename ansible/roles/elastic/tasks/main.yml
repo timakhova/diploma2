@@ -1,0 +1,34 @@
+---
+- name: Загрузка Elastic репозитория
+  shell: wget https://mirror.yandex.ru/mirrors/elastic/7/pool/main/e/elasticsearch/elasticsearch-7.17.9-amd64.deb
+  args:
+    chdir: /tmp
+
+- name: Установка Elastic репозитория
+  shell: dpkg -i elasticsearch-7.17.9-amd64.deb
+  args:
+    chdir: /tmp
+
+- name: Обновление пакетов и установка openjdk
+  apt:
+    name: openjdk-17-jdk
+    state: latest
+    update_cache: yes
+
+- name: Импортируем настройки
+  copy: 
+    src: /home/timakhova/diploma2/ansible/roles/elastic/vars/main.yml
+    dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: Перезагрузка Elastic
+  ansible.builtin.systemd:
+    name: elasticsearch
+    state: restarted
+    enabled: true
+
+#Генерируем пароль в Elasticsearch встроенной утилитой в директории
+#cd /usr/share/elasticsearch/
+#./bin/elasticsearch-setup-passwords auto
+#Получаем пароли, которые далее используем в Кибана
+#Проверяем подключение
+#curl --user elastic:*************** -X GET "http:/10.128.30.5:9200/_cat/indices?v"
